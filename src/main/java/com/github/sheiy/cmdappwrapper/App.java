@@ -7,10 +7,13 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.util.concurrent.ThreadPoolExecutor;
+
 
 public class App extends Application {
 
     private ConfigurableApplicationContext applicationContext;
+    private ThreadPoolExecutor threadPoolExecutor;
 
     @Override
     public void init() {
@@ -19,11 +22,13 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
+        threadPoolExecutor = applicationContext.getBean(ThreadPoolExecutor.class);
         applicationContext.publishEvent(new StageReadyEvent(stage));
     }
 
     @Override
     public void stop() {
+        threadPoolExecutor.shutdownNow();
         applicationContext.close();
         Platform.exit();
     }
@@ -33,7 +38,7 @@ public class App extends Application {
             super(stage);
         }
 
-        public Stage getStage(){
+        public Stage getStage() {
             return ((Stage) getSource());
         }
     }

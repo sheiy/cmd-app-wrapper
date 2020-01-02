@@ -5,6 +5,8 @@ open module app {
 
     requires org.slf4j;
 
+    requires com.fasterxml.jackson.databind;
+
     requires javafx.controls;
     requires javafx.fxml;
 
