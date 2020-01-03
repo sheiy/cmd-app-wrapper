@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -60,22 +61,18 @@ public class AppController {
                 final Task<Void> task = new Task<>() {
                     @Override
                     protected Void call() throws Exception {
-                        Process process = Runtime.getRuntime().exec(cmdApp.toString());
-                        try (InputStream inputStream = process.getInputStream();
-                             final InputStream errorStream = process.getErrorStream();
-                             final BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(inputStream));
-                             final BufferedReader errorStreamReader = new BufferedReader(new InputStreamReader(errorStream));
-                        ) {
+                        final File file = new File(cmdApp.toString());
+                        final ProcessBuilder processBuilder = new ProcessBuilder(cmdApp.toString())
+                                .redirectErrorStream(true)
+                                .directory(new File(file.getParent()));
+                        Process process = processBuilder.start();
+                        try (final InputStream inputStream = process.getInputStream();
+                             final BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(inputStream))) {
                             String in;
-                            String err;
                             while (true) {
                                 in = inputStreamReader.readLine();
-                                err = errorStreamReader.readLine();
                                 if (in != null && !in.isEmpty()) {
                                     updateMessage(textArea.getText() + in + System.lineSeparator());
-                                }
-                                if (err != null && !err.isEmpty()) {
-                                    updateMessage(textArea.getText() + err + System.lineSeparator());
                                 }
                             }
                         }

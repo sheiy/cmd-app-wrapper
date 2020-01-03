@@ -17,7 +17,7 @@ public class Beans {
         return new ObjectMapper();
     }
 
-    @Bean
+    @Bean(destroyMethod = "shutdown")
     ThreadPoolExecutor threadPoolExecutor() {
         return new ThreadPoolExecutor(3, 10, 1L, TimeUnit.MINUTES, new LinkedBlockingDeque<Runnable>(), new ThreadFactory() {
             @Override

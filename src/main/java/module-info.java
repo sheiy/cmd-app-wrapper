@@ -1,6 +1,8 @@
 open module app {
     requires static org.mapstruct.processor;
 
+    requires org.apache.commons.io;
+
     requires lombok;
 
     requires org.slf4j;
@@ -15,6 +17,8 @@ open module app {
     requires spring.boot.autoconfigure;
     requires spring.beans;
     requires spring.core;
+
+    requires java.desktop;
 
     exports com.github.sheiy.cmdappwrapper;
 }
