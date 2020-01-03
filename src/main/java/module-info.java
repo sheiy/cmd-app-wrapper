@@ -19,6 +19,7 @@ open module app {
     requires spring.core;
 
     requires java.desktop;
+    requires java.prefs;
 
     exports com.github.sheiy.cmdappwrapper;
 }
